@@ -23,6 +23,13 @@ void displayDataset();
 void quickSort(int low, int high);
 int partition(int low, int high);
 
+void selectionSort(int arr[]);
+
+void mergeSort(int left, int right);
+void merge(int left, int mid, int right);
+
+void shellSort();
+
 int main() {
     int pilihan, metode;
     int data[SIZE];
@@ -83,7 +90,15 @@ int main() {
                             break;
 
                         case 3:
-                            printf("\nSelection Sort dikerjakan anggota lain.\n");
+                            generateRandom(data);
+
+                            printf("\nData sebelum sorting:\n");
+                            displayData(data);
+
+                            selectionSort(data);
+
+                            printf("\nData setelah Selection Sort:\n");
+                            displayData(data);
                             break;
 
                         case 4:
@@ -109,8 +124,37 @@ int main() {
                 scanf("%d", &metode);
 
                 switch(metode) {
-                    case 1:
-                        printf("\nMerge Sort dikerjakan oleh orang 2.\n");
+             case 1:
+                    
+                    printf("\nMembaca file dataset...\n");
+                    bacaFile();
+
+                    if(word_count == 0){
+                        break;
+                    }
+
+                    printf("Melakukan shuffle dataset...\n");
+                    shuffleDataset();
+
+                    printf("\nData sebelum sorting:\n");
+                    displayDataset();
+    
+                    clock_t start, end;
+                    double waktu;
+
+                    start = clock();
+
+                    mergeSort(0, word_count - 1);
+
+                    end = clock();
+
+                    printf("\nData setelah Merge Sort:\n");
+                    displayDataset();
+
+                    waktu = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+                    printf("\nWaktu eksekusi Merge Sort : %f detik\n", waktu);
+
                         break;
                     case 2:
                         //baca data dari words.txt
@@ -149,7 +193,31 @@ int main() {
                         break;
 
                     case 3:
-                        printf("\nShell Sort dikerjakan oleh orang 2.\n");
+                        printf("\nMembaca file dataset...\n");
+                        bacaFile();
+
+                        if(word_count == 0){
+                        break;
+                        }
+
+                        printf("Melakukan shuffle dataset...\n");
+                        shuffleDataset();
+
+                        printf("\nData sebelum sorting:\n");
+                        displayDataset();
+                        clock_t start3, end3;
+                        double waktu3;
+        
+                        start3 = clock();
+                        shellSort();
+                        end3 = clock();
+
+                        printf("\nData setelah Shell Sort:\n");
+                        displayDataset();
+
+                        waktu3 = ((double)(end3 - start3)) / CLOCKS_PER_SEC;
+
+                        printf("\nWaktu eksekusi Shell Sort : %f detik\n", waktu3);
                         break;
 
                      case 4:
@@ -171,7 +239,7 @@ int main() {
                 printf("\nPilihan tidak valid!\n");
         }
 
-    } while(pilihan != 4);
+    } while(pilihan != 3);
 
     return 0;
 }
@@ -329,5 +397,105 @@ void quickSort(int low, int high) {
         //sortir bagian kiri dan kana secara terpisah
         quickSort(low, pi - 1);
         quickSort(pi + 1, high);
+    }
+}
+
+void merge(int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    char L[n1][MAX_LEN];
+    char R[n2][MAX_LEN];
+
+    for(int i = 0; i < n1; i++)
+        strcpy(L[i], dataset[left + i]);
+
+    for(int j = 0; j < n2; j++)
+        strcpy(R[j], dataset[mid + 1 + j]);
+
+    int i = 0, j = 0, k = left;
+
+    while(i < n1 && j < n2) {
+        if(strcmp(L[i], R[j]) <= 0) {
+            strcpy(dataset[k], L[i]);
+            i++;
+        } else {
+            strcpy(dataset[k], R[j]);
+            j++;
+        }
+        k++;
+    }
+
+    while(i < n1) {
+        strcpy(dataset[k], L[i]);
+        i++;
+        k++;
+    }
+
+    while(j < n2) {
+        strcpy(dataset[k], R[j]);
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int left, int right) {
+    if(left < right) {
+        int mid = left + (right - left) / 2;
+
+        mergeSort(left, mid);
+        mergeSort(mid + 1, right);
+
+        merge(left, mid, right);
+    }
+}
+
+void selectionSort(int arr[]) {
+    int min_idx, temp;
+    clock_t start, end;
+    double waktu;
+
+    start = clock();
+
+    for(int i = 0; i < SIZE - 1; i++) {
+        min_idx = i;
+
+        for(int j = i + 1; j < SIZE; j++) {
+            if(arr[j] < arr[min_idx]) {
+                min_idx = j;
+            }
+        }
+
+        temp = arr[i];
+        arr[i] = arr[min_idx];
+        arr[min_idx] = temp;
+    }
+
+    end = clock();
+
+    waktu = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    printf("\nWaktu eksekusi Selection Sort : %f detik\n", waktu);
+}
+
+void shellSort() {
+    char temp[MAX_LEN];
+
+    for(int gap = word_count / 2; gap > 0; gap /= 2) {
+
+        for(int i = gap; i < word_count; i++) {
+
+            strcpy(temp, dataset[i]);
+
+            int j;
+
+            for(j = i; j >= gap &&
+                strcmp(dataset[j - gap], temp) > 0; j -= gap) {
+
+                strcpy(dataset[j], dataset[j - gap]);
+            }
+
+            strcpy(dataset[j], temp);
+        }
     }
 }
