@@ -124,7 +124,7 @@ int main() {
                 scanf("%d", &metode);
 
                 switch(metode) {
-             case 1:
+             case 1: {
                     
                     printf("\nMembaca file dataset...\n");
                     bacaFile();
@@ -156,7 +156,8 @@ int main() {
                     printf("\nWaktu eksekusi Merge Sort : %f detik\n", waktu);
 
                         break;
-                    case 2:
+                     }
+                    case 2: {
                         //baca data dari words.txt
                         printf("\nMembaca file dataset...\n");
                         bacaFile();
@@ -190,9 +191,10 @@ int main() {
                         //menampilkan total waktu proses
                         waktu = ((double)(end - start)) / CLOCKS_PER_SEC;
                         printf("\nWaktu eksekusi Quick Sort : %f detik\n", waktu);
-                        break;
+                        break; 
+                        }    
 
-                    case 3:
+                    case 3: {
                         printf("\nMembaca file dataset...\n");
                         bacaFile();
 
@@ -218,7 +220,8 @@ int main() {
                         waktu3 = ((double)(end3 - start3)) / CLOCKS_PER_SEC;
 
                         printf("\nWaktu eksekusi Shell Sort : %f detik\n", waktu3);
-                        break;
+                        break; 
+                        }
 
                      case 4:
                          printf("\nKembali ke menu utama...\n");
